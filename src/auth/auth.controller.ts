@@ -18,8 +18,9 @@ export class AuthController {
     return this.authService.login(body, res);
   }
 
-  @UseGuards(JwtAuthGuard) 
-  @Get('profile')
-  async getProfile(@Query('id') id: string) {
+  @UseGuards(JwtAuthGuard)
+  @Get('getUserById')
+  async getUserById(@Query('id') id: string, @Res() res: Response) {
+    return this.authService.getUserById(id, res);
   }
 }

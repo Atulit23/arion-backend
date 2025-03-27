@@ -89,7 +89,11 @@ export class AuthService {
             secure: true,
             sameSite: 'strict',
           });
-          return res.json({ message: 'Signup successful', token, user });
+          return res.json({
+            message: 'Signup successful',
+            token,
+            data: user,
+          });
         } else {
           return res.status(400).json({ message: 'Invalid Credentials' });
         }
@@ -107,12 +111,22 @@ export class AuthService {
           return res.json({
             message: 'Signup successful',
             token,
-            existingUserName,
+            data: existingUserName,
           });
         } else {
           return res.status(400).json({ message: 'Invalid Credentials' });
         }
       }
     return null;
+  }
+
+  async getUserById(id: string, res: Response) {
+    const user = await this.authModel.findOne({_id: id})
+
+    if(!user) {
+      return res.status(400).json({"message": "User not found"})
+    }
+
+    return res.status(200).json(user)
   }
 }
