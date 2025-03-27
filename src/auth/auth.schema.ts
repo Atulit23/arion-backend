@@ -4,15 +4,18 @@ import { Document } from 'mongoose';
 export type AuthDocument = Auth & Document;
 
 @Schema()
-export class Auth {
-  @Prop({ required: true })
-  name: string;
+export class Auth extends Document {
+  @Prop({ required: true, unique: true })
+  username: string;
 
   @Prop({ required: true, unique: true })
   email: string;
 
   @Prop({ required: true, unique: true })
   password: string;
+
+  @Prop({ required: false })
+  otp: string;
 }
 
 export const AuthSchema = SchemaFactory.createForClass(Auth);
