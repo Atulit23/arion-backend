@@ -129,4 +129,23 @@ export class AuthService {
 
     return res.status(200).json(user)
   }
+
+  async updateDetails(id: string, res: Response, body: signupDto) {
+    const { email, username, password, plan } = body;
+
+    const user = await this.authModel.findOne({_id: id})
+
+    if(!user) {
+      return res.status(400).json({"message": "User not found"})
+    }
+
+    user.email = email ? email : user.email
+    user.username = username ? username : user.username
+    user.password = password ? await this.hashPassword(password) : user.password
+    user.plan = plan ? plan : user.plan
+
+    await user.save()
+
+    return res.status(200).json(user)
+  }
 }

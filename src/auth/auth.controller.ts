@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Query, Req, Res, UseGuards } from '@nestjs
 import { AuthService } from './auth.service';
 import { signupDto } from './dto/auth.dto';
 import { Response, Request } from 'express';
-import { JwtAuthGuard } from './jwt-auth.guard';
+import { JwtAuthGuard } from './jwt/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -22,5 +22,11 @@ export class AuthController {
   @Get('getUserById')
   async getUserById(@Query('id') id: string, @Res() res: Response) {
     return this.authService.getUserById(id, res);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('getUserById')
+  async updateDetails(@Query('id') id: string, @Res() res: Response, @Body() body: signupDto) {
+    return this.authService.updateDetails(id, res, body);
   }
 }

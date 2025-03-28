@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
-import { AuthDocument } from './auth.schema';
+import { AuthDocument } from '../auth.schema';
 
 interface AuthRequest extends Request {
   user?: AuthDocument; // Optional user property
