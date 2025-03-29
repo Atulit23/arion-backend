@@ -8,6 +8,7 @@ import {
   UseGuards,
   Get,
   Query,
+  BadRequestException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
@@ -20,6 +21,17 @@ import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard';
 @Controller('documents')
 export class DocumentsController {
   constructor(private readonly documentsService: DocumentsService) {}
+
+  @Post('upload-file')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile(@UploadedFile() file: Express.Multer.File) {
+    // console.log(file);
+    if (!file) {
+      throw new BadRequestException('No file uploaded');
+    }
+    const fileUrl = await this.documentsService.uploadFile(file);
+    return { fileUrl };
+  }
 
   @UseGuards(JwtAuthGuard)
   @Post('upload')

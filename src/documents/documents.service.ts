@@ -6,15 +6,61 @@ import { PrivateDocuments } from './schemas/privatedocs.schema';
 import { Auth } from 'src/auth/auth.schema';
 import { DocumentDto, UpdateDto } from './dto/document.dto';
 import { Response } from 'express';
+import { Storage } from '@google-cloud/storage';
+import * as path from 'path';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class DocumentsService {
+  private storage: Storage;
+  private bucket: string;
   constructor(
     @InjectModel(Documents.name) private docuModel: Model<Documents>,
     @InjectModel(PrivateDocuments.name)
     private privateDocModel: Model<PrivateDocuments>,
     @InjectModel(Auth.name) private authModel: Model<Auth>,
-  ) {}
+  ) {
+    this.storage = new Storage({
+      keyFilename: path.join(process.cwd(), 'arion-d7a6c-0ffa975ce068.json'), 
+      projectId: 'arion-d7a6c', 
+    });
+    
+    this.bucket = 'arion-d7a6c.firebasestorage.app';
+  }
+
+  async uploadFile(file: Express.Multer.File): Promise<string> {
+    console.log(file)
+    try {
+      const fileName = crypto.randomUUID() + file.originalname.replaceAll(' ', '');
+      const bucket = this.storage.bucket(this.bucket);
+      const blob = bucket.file(fileName);
+      
+      const stream = blob.createWriteStream({
+        resumable: false,
+        metadata: {
+          contentType: file.mimetype,
+        },
+      });
+      
+      return new Promise((resolve, reject) => {
+        stream.on('error', (err) => {
+          reject(err);
+        });
+        
+        stream.on('finish', () => {
+          // Make the file public (optional)
+          blob.makePublic().then(() => {
+            resolve(`https://storage.googleapis.com/${this.bucket}/${blob.name}`);
+          });
+        });
+        
+        stream.end(file.buffer);
+      });
+    } catch (error) {
+      throw new Error(`Failed to upload file: ${error.message}`);
+    }
+  }
+
 
   // in future file would go to this function and will be funneled to a python backend & we will recieve quizDocumentUrl, levelDocumentUrl, title, numMaxQuizScore
   async getFileData(file: any) {

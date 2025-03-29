@@ -7,6 +7,8 @@ import { PrivateDocuments, PrivateDocumentsSchema } from './schemas/privatedocs.
 import { DocumentsService } from './documents.service';
 import { Auth, AuthSchema } from 'src/auth/auth.schema';
 import { AuthModule } from 'src/auth/auth.module';
+import { diskStorage } from 'multer';
+
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -14,6 +16,7 @@ import { AuthModule } from 'src/auth/auth.module';
       { name: PrivateDocuments.name, schema: PrivateDocumentsSchema }, 
       { name: Auth.name, schema: AuthSchema }, 
     ]),
+
     PassportModule,
     AuthModule, 
   ],
@@ -22,3 +25,13 @@ import { AuthModule } from 'src/auth/auth.module';
   exports: [DocumentsService],
 })
 export class DocumentsModule {}
+
+
+    // MulterModule.register({
+    //   storage: diskStorage({
+    //     destination: './uploads',
+    //     filename: (req, file, cb) => {
+    //       cb(null, `${Date.now()}-${file.originalname}`);
+    //     },
+    //   }),
+    // }),

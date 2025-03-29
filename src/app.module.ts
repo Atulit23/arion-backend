@@ -3,12 +3,9 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthController } from './auth/auth.controller';
-import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
-import { DocumentsService } from './documents/documents.service';
-import { DocumentsController } from './documents/documents.controller';
 import { DocumentsModule } from './documents/documents.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
@@ -16,6 +13,9 @@ import { DocumentsModule } from './documents/documents.module';
     MongooseModule.forRoot(process.env.MONGO_URI || ''),
     AuthModule,
     DocumentsModule,
+    MulterModule.register({
+      dest: './uploads', 
+    })
   ],
   controllers: [AppController],
   providers: [AppService],
