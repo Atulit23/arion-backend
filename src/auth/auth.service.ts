@@ -39,7 +39,7 @@ export class AuthService {
   async signup(signupDto: signupDto, res: Response): Promise<any> {
     const { email, username, password } = signupDto;
     const newPassword: string = await this.hashPassword(password);
-    console.log(newPassword);
+
     const existing = await this.authModel.findOne({ email: email });
     const existingUserName = await this.authModel.findOne({
       username: username,

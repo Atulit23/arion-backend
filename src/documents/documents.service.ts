@@ -97,7 +97,7 @@ export class DocumentsService {
     doc.numQuizScore = numQuizScore || doc.numQuizScore;
     await doc.save();
 
-    return res.status(200).json({ message: 'Progress updated successfully' });
+    return res.status(200).json({ message: 'Progress updated successfully', document: doc });
   }
 
   async getDocumentsByUserId(userId: string, res: Response) {
