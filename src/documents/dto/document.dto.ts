@@ -1,11 +1,11 @@
 export interface DocumentDto {
     userId: string,
     type: string, // blog, text, research paper, book
+    name: string
 }
 
 export interface UpdateDto {
-    userId: string,
-    documentId: string,
+    id: string,
     levelsCompleted: Array<number>,
     quizTaken: boolean,
     quizResults: Array<object>,

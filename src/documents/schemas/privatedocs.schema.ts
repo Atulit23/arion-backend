@@ -29,8 +29,23 @@ export class PrivateDocuments extends Document {
   @Prop({ required: true })
   numMaxQuizScore: number
 
+  @Prop({ required: true })
+  numMaxLevels: number
+
   @Prop({ required: false, default: 0 })
   numQuizScore: number
+
+  @Prop({ required: true })
+  title: string;  
+
+  @Prop({ required: true })
+  levelDocumentUrl: string; // the json file where documents get dumped 
+
+  @Prop({ required: true })
+  quizDocumentUrl: string; // the json file where documents get dumped 
+
+  @Prop({ required: true })
+  type: string // blog, text, research paper, book
 }
 
 export const PrivateDocumentsSchema = SchemaFactory.createForClass(PrivateDocuments);

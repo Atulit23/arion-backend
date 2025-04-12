@@ -15,10 +15,16 @@ export class Documents extends Document {
   type: string // blog, text, research paper, book
 
   @Prop({ required: true })
+  numMaxQuizScore: number
+
+  @Prop({ required: true })
   levelDocumentUrl: string; // the json file where documents get dumped 
 
   @Prop({ required: true })
   quizDocumentUrl: string; // the json file where documents get dumped 
+
+  @Prop({ required: true })
+  numMaxLevels: number
 }
 
 export const DocumentsSchema = SchemaFactory.createForClass(Documents);

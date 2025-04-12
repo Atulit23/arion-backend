@@ -36,19 +36,7 @@ export class DocumentsController {
   @UseGuards(JwtAuthGuard)
   @Post('upload')
   @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './uploads',
-        filename: (req, file, callback) => {
-          const uniqueSuffix =
-            Date.now() + '-' + Math.round(Math.random() * 1e9);
-          callback(
-            null,
-            `${file.fieldname}-${uniqueSuffix}${extname(file.originalname)}`,
-          );
-        },
-      }),
-    }),
+    FileInterceptor('file'),
   )
   async uploadDocument(
     @UploadedFile() file: Express.Multer.File,
@@ -56,6 +44,7 @@ export class DocumentsController {
     @Res() res: Response,
   ) {
     try {
+      console.log(file)
       return await this.documentsService.uploadDocument(documentDto, file, res);
     } catch (error) {
       console.error('Upload Error:', error);
@@ -78,6 +67,15 @@ export class DocumentsController {
     return await this.documentsService.getDocumentsByUserId(userId, res);
   }
 
+  @Get('getDocumentsByDocuemntId')
+  @UseGuards(JwtAuthGuard)
+  async getDocumentsByDocuemntId(
+    @Query('docuemntId') dcuemntId: string,
+    @Res() res: Response,
+  ) {
+    return await this.documentsService.getDocumentsByDocuemntId(dcuemntId, res);
+  }
+
   @Get('getDocumentsForProgress')
   @UseGuards(JwtAuthGuard)
   async getDocumentsForProgress(
@@ -89,6 +87,18 @@ export class DocumentsController {
       userId,
       documentId,
       res,
+    );
+  }
+
+  @Get('getPrivateDocumentsByUserId')
+  @UseGuards(JwtAuthGuard)
+  async getPrivateDocumentsById(
+    @Query('userId') userId: string,
+    @Res() res: Response,
+  ) {
+    return await this.documentsService.getPrivateDocumentsByUserId(
+      userId,
+      res
     );
   }
 }

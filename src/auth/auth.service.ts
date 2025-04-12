@@ -64,8 +64,9 @@ export class AuthService {
 
     res.cookie('jwt', token, {
       httpOnly: true,
-      secure: true,
+      secure: false,
       sameSite: 'strict',
+      path: '/',
     });
 
     return res.json({ message: 'Signup successful', token, newUser });
@@ -86,13 +87,15 @@ export class AuthService {
           const token = await this.generateToken(user);
           res.cookie('jwt', token, {
             httpOnly: true,
-            secure: true,
+            secure: false,
             sameSite: 'strict',
+            path: '/',
           });
           return res.json({
             message: 'Signup successful',
             token,
             data: user,
+
           });
         } else {
           return res.status(400).json({ message: 'Invalid Credentials' });
@@ -105,8 +108,9 @@ export class AuthService {
           const token = await this.generateToken(existingUserName);
           res.cookie('jwt', token, {
             httpOnly: true,
-            secure: true,
+            secure: false,
             sameSite: 'strict',
+            path: '/',
           });
           return res.json({
             message: 'Signup successful',
